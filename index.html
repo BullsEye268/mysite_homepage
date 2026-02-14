@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Domain</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=League+Spartan:wght@200;300&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg-primary: #0a0a0a;
+        --text-primary: #e8e8e8;
+        --text-secondary: #a0a0a0;
+        --accent: #d4af37;
+      }
+
+      body {
+        font-family: "League Spartan", sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        cursor: none;
+      }
+
+      /* Custom Cursor */
+      #cursor {
+        width: 20px;
+        height: 20px;
+        border: 1px solid var(--accent);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        transition:
+          transform 0.15s ease,
+          border-color 0.3s ease;
+        will-change: transform;
+      }
+
+      #cursor-follower {
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9998;
+        will-change: transform;
+      }
+
+      /* Animated Background */
+      .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.03;
+      }
+
+      .grid-line {
+        position: absolute;
+        background: var(--text-primary);
+      }
+
+      .grid-line.horizontal {
+        width: 100%;
+        height: 1px;
+        animation: slideRight 20s linear infinite;
+      }
+
+      .grid-line.vertical {
+        width: 1px;
+        height: 100%;
+        animation: slideDown 15s linear infinite;
+      }
+
+      @keyframes slideRight {
+        from {
+          transform: translateX(-100%);
+        }
+        to {
+          transform: translateX(100%);
+        }
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(-100%);
+        }
+        to {
+          transform: translateY(100%);
+        }
+      }
+
+      /* Main Container */
+      .container {
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
+
+      /* Main Content */
+      .content {
+        text-align: center;
+        max-width: 800px;
+        animation: fadeInUp 1.2s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .tagline {
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        letter-spacing: 0.4em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        font-weight: 200;
+        margin-bottom: 2rem;
+        animation: fadeIn 1.5s ease-out 0.3s both;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      h1 {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(3rem, 10vw, 7rem);
+        font-weight: 300;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        position: relative;
+        animation: fadeInScale 1.2s ease-out 0.5s both;
+      }
+
+      @keyframes fadeInScale {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .title-accent {
+        color: var(--accent);
+        font-style: italic;
+      }
+
+      .description {
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        line-height: 1.8;
+        color: var(--text-secondary);
+        font-weight: 200;
+        letter-spacing: 0.05em;
+        margin-bottom: 3rem;
+        animation: fadeIn 1.5s ease-out 0.8s both;
+      }
+
+      /* Decorative Line */
+      .decorative-line {
+        width: 100px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 3rem auto;
+        animation: expandWidth 1.5s ease-out 1s both;
+      }
+
+      @keyframes expandWidth {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100px;
+        }
+      }
+
+      /* Footer */
+      footer {
+        position: fixed;
+        bottom: 2rem;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        letter-spacing: 0.15em;
+        font-weight: 200;
+        z-index: 2;
+        animation: fadeIn 2s ease-out 1.5s both;
+      }
+
+      footer span {
+        color: var(--text-primary);
+        font-weight: 300;
+      }
+
+      /* Floating ornaments */
+      .ornament {
+        position: fixed;
+        width: 2px;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0;
+        animation: float 8s ease-in-out infinite;
+      }
+
+      .ornament:nth-child(1) {
+        top: 20%;
+        left: 15%;
+        animation-delay: 0s;
+      }
+
+      .ornament:nth-child(2) {
+        top: 60%;
+        right: 20%;
+        animation-delay: 2s;
+      }
+
+      .ornament:nth-child(3) {
+        bottom: 25%;
+        left: 25%;
+        animation-delay: 4s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          opacity: 0;
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: translateY(-20px) scale(1.5);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .tagline {
+          letter-spacing: 0.3em;
+        }
+
+        footer {
+          font-size: 0.75rem;
+          padding: 0 1rem;
+        }
+
+        #cursor,
+        #cursor-follower {
+          display: none;
+        }
+
+        body {
+          cursor: default;
+        }
+      }
+
+      /* Loading animation */
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loader {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+        height: 50px;
+        border: 2px solid transparent;
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        z-index: 10000;
+        opacity: 1;
+        transition: opacity 0.3s;
+      }
+
+      .loader.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      body.loaded .loader {
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loader -->
+    <div class="loader"></div>
+
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+    <div id="cursor-follower"></div>
+
+    <!-- Animated Background -->
+    <div class="background">
+      <div class="grid-line horizontal" style="top: 20%"></div>
+      <div
+        class="grid-line horizontal"
+        style="top: 50%; animation-delay: -5s"
+      ></div>
+      <div
+        class="grid-line horizontal"
+        style="top: 80%; animation-delay: -10s"
+      ></div>
+      <div class="grid-line vertical" style="left: 15%"></div>
+      <div
+        class="grid-line vertical"
+        style="left: 50%; animation-delay: -7s"
+      ></div>
+      <div
+        class="grid-line vertical"
+        style="left: 85%; animation-delay: -3s"
+      ></div>
+    </div>
+
+    <!-- Floating Ornaments -->
+    <div class="ornament"></div>
+    <div class="ornament"></div>
+    <div class="ornament"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+      <main class="content">
+        <p class="tagline">Digital Presence</p>
+        <h1>
+          A <span class="title-accent">Personal</span><br />
+          Domain
+        </h1>
+        <div class="decorative-line"></div>
+        <p class="description">
+          A space reserved for creative expression,<br />
+          thoughtful work, and meaningful connections.
+        </p>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <span>Your Name</span>
+    </footer>
+
+    <script>
+      // Custom cursor with smooth animation
+      const cursor = document.getElementById("cursor");
+      const cursorFollower = document.getElementById("cursor-follower");
+
+      let mouseX = 0,
+        mouseY = 0;
+      let cursorX = 0,
+        cursorY = 0;
+      let followerX = 0,
+        followerY = 0;
+
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      // Animate both cursors smoothly
+      function animateCursor() {
+        // Main cursor follows immediately but smoothly
+        const cursorDx = mouseX - cursorX;
+        const cursorDy = mouseY - cursorY;
+
+        cursorX += cursorDx * 0.2;
+        cursorY += cursorDy * 0.2;
+
+        cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
+
+        // Follower has more lag
+        const followerDx = mouseX - followerX;
+        const followerDy = mouseY - followerY;
+
+        followerX += followerDx * 0.08;
+        followerY += followerDy * 0.08;
+
+        cursorFollower.style.transform = `translate(${followerX - 4}px, ${followerY - 4}px)`;
+
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+
+      // Loading
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          document.body.classList.add("loaded");
+          document.querySelector(".loader").classList.add("hidden");
+        }, 500);
+      });
+
+      // Hover effects for text elements
+      const interactiveElements = document.querySelectorAll(
+        "h1, .description, .tagline",
+      );
+      let isHovering = false;
+
+      interactiveElements.forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          isHovering = true;
+          cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px) scale(1.5)`;
+          cursor.style.borderColor = "var(--text-primary)";
+        });
+        el.addEventListener("mouseleave", () => {
+          isHovering = false;
+          cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px) scale(1)`;
+          cursor.style.borderColor = "var(--accent)";
+        });
+      });
+    </script>
+  </body>
+</html>
